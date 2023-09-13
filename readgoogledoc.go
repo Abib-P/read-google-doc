@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -106,4 +107,10 @@ func main() {
 		log.Fatalf("Unable to retrieve data from document: %v", err)
 	}
 	fmt.Printf("The title of the doc is: %s\n", doc.Title)
+	// print all line of te docs qui comment a 1
+	for i := 1; i < len(doc.Body.Content); i++ {
+		//fmt.Printf("line %d: %s\n", i, doc.Body.Content[i].Paragraph.Elements[0].TextRun.Content)
+		// remove the last return to line
+		fmt.Printf("line %d: %s\n", i, strings.TrimSuffix(doc.Body.Content[i].Paragraph.Elements[0].TextRun.Content, "\n"))
+	}
 }
