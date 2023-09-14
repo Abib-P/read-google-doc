@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sort"
 	"strings"
 
 	"golang.org/x/oauth2"
@@ -107,10 +108,26 @@ func main() {
 		log.Fatalf("Unable to retrieve data from document: %v", err)
 	}
 	fmt.Printf("The title of the doc is: %s\n", doc.Title)
-	// print all line of te docs qui comment a 1
+
+	set := make(map[string]bool)
+	list := make([]string, 0)
 	for i := 1; i < len(doc.Body.Content); i++ {
-		//fmt.Printf("line %d: %s\n", i, doc.Body.Content[i].Paragraph.Elements[0].TextRun.Content)
-		// remove the last return to line
-		fmt.Printf("line %d: %s\n", i, strings.TrimSuffix(doc.Body.Content[i].Paragraph.Elements[0].TextRun.Content, "\n"))
+		split := strings.Split(strings.ToLower(doc.Body.Content[i].Paragraph.Elements[0].TextRun.Content), string(rune(11)))
+		for j := 0; j < len(split); j++ {
+			if strings.TrimSpace(split[j]) == "" {
+				continue
+			}
+			split[j] = strings.TrimSpace(split[j])
+			set[split[j]] = true
+			list = append(list, split[j])
+		}
+	}
+
+	fmt.Printf("number of films found: %d\n", len(list))
+	fmt.Printf("number of unique films found: %d\n", len(set))
+
+	sort.Strings(list)
+	for i := 0; i < len(list); i++ {
+		fmt.Printf("%s\n", list[i])
 	}
 }
