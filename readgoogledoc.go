@@ -110,7 +110,6 @@ func main() {
 	fmt.Printf("The title of the doc is: %s\n", doc.Title)
 
 	set := make(map[string]bool)
-	list := make([]string, 0)
 	for i := 1; i < len(doc.Body.Content); i++ {
 		split := strings.Split(strings.ToLower(doc.Body.Content[i].Paragraph.Elements[0].TextRun.Content), string(rune(11)))
 		for j := 0; j < len(split); j++ {
@@ -119,15 +118,21 @@ func main() {
 			}
 			split[j] = strings.TrimSpace(split[j])
 			set[split[j]] = true
-			list = append(list, split[j])
 		}
 	}
 
-	fmt.Printf("number of films found: %d\n", len(list))
 	fmt.Printf("number of unique films found: %d\n", len(set))
 
-	sort.Strings(list)
-	for i := 0; i < len(list); i++ {
-		fmt.Printf("%s\n", list[i])
+	sortedList := make([]string, 0, len(set))
+	// sort the set
+	for k := range set {
+		sortedList = append(sortedList, k)
+	}
+
+	sort.Strings(sortedList)
+
+	// print the sorted list
+	for i := 0; i < len(sortedList); i++ {
+		fmt.Printf("%s\n", sortedList[i])
 	}
 }
